@@ -32,7 +32,13 @@ To use `imgtag`:
 from imgtag import ImgTag
 
 # Open image for tag editing
-test = ImgTag("test.jpg", force_case='lower', strip=True, no_duplicates=True)
+test = ImgTag(
+           filename="test.jpg", # The image file
+           force_case="lower",  # Converts the case of all tags
+                                # Can be `None`, `"lower"`, `"upper"`
+           strip=True,          # Strips whitespace from the ends of all tags
+           no_duplicates=True   # Removes all duplicate tags (case sensitive)
+       )
 
 # Print existing tags
 print("Current tags:")
