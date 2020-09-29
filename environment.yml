@@ -1,0 +1,10 @@
+name: imgtag
+channels:
+  - conda-forge
+dependencies:
+  - python=3.7*
+  - pip
+  - exempi
+  - pip:
+    - -r file:requirements.txt
+    - imgtag

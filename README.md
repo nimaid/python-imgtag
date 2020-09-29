@@ -1,15 +1,31 @@
 # ImgTag
-Simple XMP Image Tag & Metadata Editing Module
+### Simple XMP Image Tag & Metadata Editing Module
 
-You must install `exempi` for your OS. For Debian:
+It is recomended to install using Conda to create a virtual python environment, as it makes it easy to install and manage different packages. Use the following commands to set up an environment:
 ```
-sudo apt-get update && sudo apt-get install -y exempi
+conda env create -f environment.yml
+conda activate imgtag
+```
+
+<br/>
+
+If you close to install manually, you must install `exempi` for your OS.
+
+For Debian:
+```
+sudo apt-get install -y exempi
+```
+For a Conda environment:
+```
+conda install -c conda-forge exempi
 ```
 
 Once `exempi` is installed, install `imgtag` with:
 ```
 python3 -m pip install -y imgtag
 ```
+
+<br/>
 
 To use `imgtag`:
 ```python
