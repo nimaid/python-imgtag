@@ -36,15 +36,17 @@ test = ImgTag(
            filename="test.jpg", # The image file
            force_case="lower",  # Converts the case of all tags
                                 # Can be `None`, `"lower"`, `"upper"`
+                                # Default: None
            strip=True,          # Strips whitespace from the ends of all tags
+                                # Default: True
            no_duplicates=True   # Removes all duplicate tags (case sensitive)
+                                # Default: True
        )
 
 # Print existing tags
 print("Current tags:")
 for tag in test.get_tags():
     print("  Tag:", tag)
-print()
 
 # Add tags
 test.add_tags(["sleepy", "happy"])
