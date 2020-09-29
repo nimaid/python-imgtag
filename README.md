@@ -1,3 +1,7 @@
-# Python `imgtag` Module
+# ImgTag
+Simple XMP Image Tag & Metadata Editing Module
 
-Simple XMP Image Tag & Metadata Editing Library
+You must install `exempi` for your OS. For Debian:
+```
+sudo apt-get update && sudo apt-get install -y exempi
+```
