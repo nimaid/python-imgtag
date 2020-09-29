@@ -6,14 +6,15 @@ class ImgTag:
         self.filename = filename
         self.is_open = False
         
-        self.tags = None;
-        
-        self.open()
+        self.tags = None
         
         # Add valueerrors
         self.force_case = force_case
         self.strip = strip
         self.no_duplicates = no_duplicates
+        
+        self.open()
+        temp = self.get_tags()
     
     def __del__(self):
         self.close()
@@ -61,24 +62,24 @@ class ImgTag:
         tags = [self.xmp.get_array_item(libxmp.consts.XMP_NS_DC, "subject", i).strip().lower() for i in range(1, num_tags+1)]
         
         # Strip
-        if strip == True:
+        if self.strip == True:
              tags = [x.strip() for x in tags]
-        elif strip != False:
+        elif self.strip != False:
             raise ValueError("strip argument must be either True or False")
         
         # Force case
-        if force_case != None:
-            if force_case.lower() == "upper":
+        if self.force_case != None:
+            if self.force_case.lower() == "upper":
                 tags = [x.upper() for x in tags]
-            elif force_case.lower() == "lower":
+            elif self.force_case.lower() == "lower":
                 tags = [x.lower() for x in tags]
             else:
                 raise ValueError("force_case argument must be either None, 'upper' or 'lower'")
         
         # Remove duplicates
-        if no_duplicates == True:
-            self.tags = list(set(self.tags))
-        elif no_duplicates != False:
+        if self.no_duplicates == True:
+            tags = list(set(tags))
+        elif self.no_duplicates != False:
             raise ValueError("no_duplicates argument must be either True or False")
         
         self.tags = tags
@@ -86,28 +87,31 @@ class ImgTag:
     
     def add_tags(self, tags):
         # Get existing tags (updates self.tags)
-        temp = get_tags()
+        temp = self.get_tags()
         
         # Strip
-        if strip == True:
+        if self.strip == True:
             tags = [x.strip() for x in tags]
         
         # Force case
-        if force_case != None:
-            if force_case.lower() == "upper":
+        if self.force_case != None:
+            if self.force_case.lower() == "upper":
                 tags = [x.upper() for x in tags]
-            elif force_case.lower() == "lower":
+            elif self.force_case.lower() == "lower":
                 tags = [x.lower() for x in tags]
         
         # Append tags
         for tag in tags:
             # Skip duplicates
-            if no_duplicates:
+            if self.no_duplicates:
                 if tag in self.tags:
                     continue
             
             # Append
-            xmp.append_array_item(libxmp.consts.XMP_NS_DC, "subject", tag, {"prop_array_is_ordered":True, "prop_value_is_array":True})
+            self.xmp.append_array_item(libxmp.consts.XMP_NS_DC, "subject", tag, {"prop_array_is_ordered":True, "prop_value_is_array":True})
             self.tags.append(tag)
     
     
+    def clear_tags(self):
+        self.tags = []
+        self.xmp = self.xmpfile.get_xmp()
