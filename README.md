@@ -9,7 +9,7 @@ conda activate imgtag
 
 <br/>
 
-If you close to install manually, you must install `exempi` for your OS.
+If you choose to install manually, you must install `exempi` for your OS.
 
 For Debian:
 ```

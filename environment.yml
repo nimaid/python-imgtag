@@ -7,4 +7,3 @@ dependencies:
   - exempi
   - pip:
     - -r file:requirements.txt
-    - imgtag
