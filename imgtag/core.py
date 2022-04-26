@@ -87,16 +87,20 @@ class ImgTag:
         if self.is_open:
             # Test if can write tags
             if self.xmpfile.can_put_xmp(self.xmp):
-                # Write tags
-                self.xmpfile.put_xmp(self.xmp)
-                
-                # Close file
-                self.xmpfile.close_file()
-                saved = True
+                try:
+                    # Write tags
+                    self.xmpfile.put_xmp(self.xmp)
+
+                    # Close file
+                    self.xmpfile.close_file()
+                    saved = True
+                except libxmp.XMPError:
+                    warnings.warn("Could not save metadata in image!")
+                    saved = False
             else:
                 # Close file
                 self.xmpfile.close_file()
-                warnings.warn("Could not save tags in image!")
+                warnings.warn("Could not save metadata in image!")
                 saved = False
             
             self.is_open = False
