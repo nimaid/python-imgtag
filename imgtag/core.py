@@ -7,6 +7,7 @@ class ImgTag:
         self.is_open = False
         
         self.tags = None
+        self.title = None
         self.description = None
         self.xmpfile = None
         self.xmp = None
@@ -73,6 +74,9 @@ class ImgTag:
             
             self.is_open = True
             
+            # Get title
+            temp = self.get_title()
+            
             # Get description
             temp = self.get_description()
             
@@ -98,6 +102,7 @@ class ImgTag:
             self.is_open = False
             
             self.tags = None
+            self.title = None
             self.description = None
             self.xmpfile = None
             self.xmp = None
@@ -125,11 +130,16 @@ class ImgTag:
         self.tags = tags
         return self.tags
     
+    def get_title(self):
+        self.title = None
+        if self.xmp.does_property_exist(libxmp.consts.XMP_NS_DC, "title"):
+            self.title = self.xmp.get_array_item(libxmp.consts.XMP_NS_DC, "title", 1)
+        return self.title
+    
     def get_description(self):
         self.description = None
         if self.xmp.does_property_exist(libxmp.consts.XMP_NS_DC, "description"):
             self.description = self.xmp.get_array_item(libxmp.consts.XMP_NS_DC, "description", 1)
-
         return self.description
     
     def add_tags(self, tags):
@@ -177,6 +187,15 @@ class ImgTag:
         # Set the tags
         self.set_tags(final_tags)
     
+    def clear_title(self):
+        self.xmp.delete_property(libxmp.consts.XMP_NS_DC, "title")
+        self.title = None
+    
+    def set_title(self, text):
+        self.clear_title()
+        
+        self.xmp.append_array_item(libxmp.consts.XMP_NS_DC, "title", text, {"prop_array_is_alt":True})
+        self.title = text
     
     def clear_description(self):
         self.xmp.delete_property(libxmp.consts.XMP_NS_DC, "description")
