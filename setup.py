@@ -12,7 +12,7 @@ with open('requirements.txt', 'r') as fh:
 
 setuptools.setup(
     name="imgtag",
-    version="0.1.1",
+    version="1.0.0",
     author="Ella Jameson",
     author_email="ellagjamson@gmail.com",
     description="Simple XMP Image Tag & Metadata Editing Library",
