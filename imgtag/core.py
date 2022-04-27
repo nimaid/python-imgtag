@@ -62,15 +62,20 @@ class ImgTag:
     
     def open(self):
         if not self.is_open:
-            # Open file for updating
-            self.xmpfile = libxmp.XMPFiles(file_path=self.filename, open_forupdate=True)
-            
-            # Try to read existing XMP
-            self.xmp = self.xmpfile.get_xmp()
-            
-            # Make new XMP if not exist
-            if self.xmp is None:
-                self.xmp = libxmp.core.XMPMeta()
+            # Try to open the file
+            try:
+                # Open file for updating
+                self.xmpfile = libxmp.XMPFiles(file_path=self.filename, open_forupdate=True)
+
+                # Try to read existing XMP
+                self.xmp = self.xmpfile.get_xmp()
+
+                # Make new XMP if not exist
+                if self.xmp is None:
+                    self.xmp = libxmp.core.XMPMeta()
+            except KeyError:
+                # unable to open
+                raise SystemError("Cannot open file for XMP editing!")
             
             self.is_open = True
             
