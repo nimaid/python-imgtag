@@ -1,6 +1,23 @@
 import libxmp
 import warnings
 import os
+import resource
+import psutil
+
+def set_memory_limit(limit_ratio=0.5):
+    # Sets a memory limit based on a percentage of available memory at the time of calling
+    if type(limit_ratio) not in [float, int]:
+        raise TypeError("The parameter 'limit_ratio' requires a float greater than 0 and less than or equal to 1")
+    if limit_ratio <= 0 or limit_ratio > 1:
+        raise ValueError("The parameter 'limit_ratio' requires a float greater than 0 and less than or equal to 1")
+    
+    if limit_ratio == None:
+        # No limit
+        resource.setrlimit(resource.RLIMIT_AS, (-1, -1))
+    else:
+        soft, hard = resource.getrlimit(resource.RLIMIT_AS)
+        available_memory = psutil.virtual_memory().available
+        resource.setrlimit(resource.RLIMIT_AS, (round(available_memory * limit_ratio), hard))
 
 class ImgTag:
     def __init__(self, filename, force_case=None, strip=True, no_duplicates=True):
@@ -62,6 +79,8 @@ class ImgTag:
     
     def open(self):
         if not self.is_open:
+            # Set a memory limit (some .gf files cause libxmp to freak out)
+            set_memory_limit(limit_ratio=0.5)
             # Try to open the file
             try:
                 # Open file for updating
@@ -74,7 +93,10 @@ class ImgTag:
                 if self.xmp is None:
                     self.xmp = libxmp.core.XMPMeta()
             except KeyError:
-                # unable to open
+                # Unable to open
+                raise SystemError("Cannot open file for XMP editing!")
+            except libxmp.XMPError:
+                # libxmp died
                 raise SystemError("Cannot open file for XMP editing!")
             
             self.is_open = True
@@ -107,6 +129,9 @@ class ImgTag:
                 self.xmpfile.close_file()
                 warnings.warn("Could not save metadata in image!")
                 saved = False
+            
+            # Reset memory limit
+            set_memory_limit(limit_ratio=None)
             
             self.is_open = False
             

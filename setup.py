@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="imgtag",
-    version="1.0.3",
+    version="1.0.4",
     author="Ella Jameson",
     author_email="ellagjamson@gmail.com",
     description="Simple XMP Image Tag & Metadata Editing Library",
@@ -19,5 +19,5 @@ setuptools.setup(
         "Operating System :: OS Independent",
     ],
     python_requires='>=3.6',
-    install_requires=["python-xmp-toolkit"]
+    install_requires=["python-xmp-toolkit", "resource", "psutil"]
 )
