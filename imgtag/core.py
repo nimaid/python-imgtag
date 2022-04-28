@@ -4,7 +4,9 @@ import os
 import resource
 import psutil
 
-def set_memory_limit(limit_ratio=0.5):
+__DEFAULT_MEMORY_LIMIT_RATIO__ = 0.8 # If more than this percent of available memory is used, an error is returned
+
+def set_memory_limit(limit_ratio=__DEFAULT_MEMORY_LIMIT_RATIO__):
     # Sets a memory limit based on a percentage of available memory at the time of calling
     if limit_ratio == None:
         # No limit
@@ -80,7 +82,7 @@ class ImgTag:
     def open(self):
         if not self.is_open:
             # Set a memory limit (some .gf files cause libxmp to freak out)
-            set_memory_limit(limit_ratio=0.5)
+            set_memory_limit(limit_ratio=__DEFAULT_MEMORY_LIMIT_RATIO__)
             # Try to open the file
             try:
                 # Open file for updating
