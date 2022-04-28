@@ -6,15 +6,15 @@ import psutil
 
 def set_memory_limit(limit_ratio=0.5):
     # Sets a memory limit based on a percentage of available memory at the time of calling
-    if type(limit_ratio) not in [float, int]:
-        raise TypeError("The parameter 'limit_ratio' requires a float greater than 0 and less than or equal to 1")
-    if limit_ratio <= 0 or limit_ratio > 1:
-        raise ValueError("The parameter 'limit_ratio' requires a float greater than 0 and less than or equal to 1")
-    
     if limit_ratio == None:
         # No limit
         resource.setrlimit(resource.RLIMIT_AS, (-1, -1))
     else:
+        if type(limit_ratio) not in [float, int]:
+            raise TypeError("The parameter 'limit_ratio' requires a float greater than 0 and less than or equal to 1")
+        if limit_ratio <= 0 or limit_ratio > 1:
+            raise ValueError("The parameter 'limit_ratio' requires a float greater than 0 and less than or equal to 1")
+        
         soft, hard = resource.getrlimit(resource.RLIMIT_AS)
         available_memory = psutil.virtual_memory().available
         resource.setrlimit(resource.RLIMIT_AS, (round(available_memory * limit_ratio), hard))
