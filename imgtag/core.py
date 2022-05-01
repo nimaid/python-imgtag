@@ -21,6 +21,13 @@ def set_memory_limit(limit_ratio=__DEFAULT_MEMORY_LIMIT_RATIO__):
         available_memory = psutil.virtual_memory().available
         resource.setrlimit(resource.RLIMIT_AS, (round(available_memory * limit_ratio), hard))
 
+def strip_file_blank_space(filename):
+    with open(filename, "rb") as f:
+        data = f.read()
+    data = data.strip(b'\x00')
+    with open(filename, "wb") as f:
+        f.write(data)
+
 class ImgTag:
     def __init__(self, filename, force_case=None, strip=True, no_duplicates=True):
         self.is_open = False
@@ -142,6 +149,11 @@ class ImgTag:
             self.description = None
             self.xmpfile = None
             self.xmp = None
+            
+            # Sometimes, libxmp saves hundreds of megabytes of zeros at the end
+            # This fixes it
+            if saved:
+                strip_file_blank_space(self.filename)
             
             return saved
     
