@@ -76,7 +76,7 @@ def strip_file_blank_space(filename, block_size=__DEFAULT_BLOCK_SIZE__):
     
     # If we are doing a normal strip:
     if simple_data != None:
-        # Strip right leading null bytes
+        # Strip right trailing null bytes
         simple_data = simple_data.rstrip(b'\x00')
         # Directly replace file
         with open(filename, "wb") as f:
@@ -86,7 +86,7 @@ def strip_file_blank_space(filename, block_size=__DEFAULT_BLOCK_SIZE__):
         return len(simple_data)
     # If we are doing a block-by-block copy and replace
     else:
-        # Create temporary file (do not delete, will move myself
+        # Create temporary file (do not delete, will move myself)
         temp_file = tempfile.NamedTemporaryFile(mode="wb", delete=False)
         # Open the source file for reading
         with open(filename, "rb") as f:
@@ -202,10 +202,10 @@ class ImgTag:
                     self.xmp = libxmp.core.XMPMeta()
             except KeyError:
                 # Unable to open
-                raise SystemError("Cannot open file for XMP editing!")
+                raise SystemError("Cannot open file for XMP editing! (unable to open)")
             except libxmp.XMPError:
                 # libxmp died
-                raise SystemError("Cannot open file for XMP editing!")
+                raise SystemError("Cannot open file for XMP editing! (libxmp failed)")
             
             self.is_open = True
             
@@ -230,12 +230,12 @@ class ImgTag:
                     self.xmpfile.close_file()
                     saved = True
                 except libxmp.XMPError:
-                    warnings.warn("Could not save metadata in image!")
+                    warnings.warn("Could not save metadata in image! (failed to write)")
                     saved = False
             else:
                 # Close file
                 self.xmpfile.close_file()
-                warnings.warn("Could not save metadata in image!")
+                warnings.warn("Could not save metadata in image! (unable to put XMP)")
                 saved = False
             
             # Reset memory limit
