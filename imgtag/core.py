@@ -67,10 +67,6 @@ def strip_file_blank_space(filename, block_size=__DEFAULT_BLOCK_SIZE__):
                 partial_block_data = f.read(num_bytes_partial_block)
                 # Strip from the right side
                 partial_block_data = partial_block_data.rstrip(b"\x00")
-                # Test if this block (and therefore the entire file) is zeros
-                if len(partial_block_data) == 0:
-                    # Warn about the empty file
-                    warnings.warn("File was all zeros and will be replaced with an empty file")
                 # Set the location where the real data begins
                 file_end_loc = len(partial_block_data)
     
@@ -128,7 +124,7 @@ def strip_file_blank_space(filename, block_size=__DEFAULT_BLOCK_SIZE__):
 
 
 class ImgTag:
-    def __init__(self, filename, force_case=None, strip=True, no_duplicates=True):
+    def __init__(self, filename, force_case=None, strip=True, no_duplicates=True, use_warnings=True):
         self.is_open = False
         
         self.tags = None
@@ -152,6 +148,10 @@ class ImgTag:
         if type(no_duplicates) != bool:
             raise ValueError("no_duplicates argument must be either True or False")
         self.no_duplicates = no_duplicates
+        
+        if type(use_warnings) != bool:
+            raise ValueError("use_warnings argument must be either True or False")
+        self.use_warnings = use_warnings
         
         self.open()
     
@@ -230,12 +230,14 @@ class ImgTag:
                     self.xmpfile.close_file()
                     saved = True
                 except libxmp.XMPError:
-                    warnings.warn("Could not save metadata in image! (failed to write)")
+                    if self.use_warnings:
+                        warnings.warn("Could not save metadata in image! (failed to write)")
                     saved = False
             else:
                 # Close file
                 self.xmpfile.close_file()
-                warnings.warn("Could not save metadata in image! (unable to put XMP)")
+                if self.use_warnings:
+                    warnings.warn("Could not save metadata in image! (unable to put XMP)")
                 saved = False
             
             # Reset memory limit

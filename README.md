@@ -39,7 +39,9 @@ test = ImgTag(
                                 # Default: None
            strip=True,          # Strips whitespace from the ends of all tags
                                 # Default: True
-           no_duplicates=True   # Removes all duplicate tags (case sensitive)
+           no_duplicates=True,  # Removes all duplicate tags (case sensitive)
+                                # Default: True
+           use_warnings=True    # Toggles warnings
                                 # Default: True
        )
 
