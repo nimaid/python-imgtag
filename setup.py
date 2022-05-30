@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="imgtag",
-    version="1.1.1",
+    version="1.1.2",
     author="Ella Jameson",
     author_email="ellagjamson@gmail.com",
     description="Simple XMP Image Tag & Metadata Editing Library",

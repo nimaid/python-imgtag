@@ -124,7 +124,7 @@ def strip_file_blank_space(filename, block_size=__DEFAULT_BLOCK_SIZE__):
 
 
 class ImgTag:
-    def __init__(self, filename, force_case=None, strip=True, no_duplicates=True, use_warnings=True):
+    def __init__(self, filename, force_case=None, strip=True, no_duplicates=True, use_warnings=True, memory_limit_ratio=__DEFAULT_MEMORY_LIMIT_RATIO__):
         self.is_open = False
         
         self.tags = None
@@ -152,6 +152,13 @@ class ImgTag:
         if type(use_warnings) != bool:
             raise ValueError("use_warnings argument must be either True or False")
         self.use_warnings = use_warnings
+        
+        if memory_limit_ratio != None:
+            if type(memory_limit_ratio) not in [float, int]:
+                raise TypeError("The parameter 'memory_limit_ratio' requires a float greater than 0 and less than or equal to 1")
+            if memory_limit_ratio <= 0 or memory_limit_ratio > 1:
+                raise ValueError("The parameter 'memory_limit_ratio' requires a float greater than 0 and less than or equal to 1")
+        self.memory_limit_ratio = memory_limit_ratio
         
         self.open()
     
@@ -188,7 +195,7 @@ class ImgTag:
     def open(self):
         if not self.is_open:
             # Set a memory limit (some .gf files cause libxmp to freak out)
-            set_memory_limit(limit_ratio=__DEFAULT_MEMORY_LIMIT_RATIO__)
+            set_memory_limit(limit_ratio=self.memory_limit_ratio)
             # Try to open the file
             try:
                 # Open file for updating
