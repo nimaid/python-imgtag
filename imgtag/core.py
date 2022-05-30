@@ -14,7 +14,10 @@ def set_memory_limit(limit_ratio=__DEFAULT_MEMORY_LIMIT_RATIO__):
     # Sets a memory limit based on a percentage of available memory at the time of calling
     if limit_ratio == None:
         # No limit
-        resource.setrlimit(resource.RLIMIT_AS, (-1, -1))
+        try:
+            resource.setrlimit(resource.RLIMIT_AS, (-1, -1))
+        except:
+            return False
     else:
         if type(limit_ratio) not in [float, int]:
             raise TypeError("The parameter 'limit_ratio' requires a float greater than 0 and less than or equal to 1")
@@ -26,7 +29,12 @@ def set_memory_limit(limit_ratio=__DEFAULT_MEMORY_LIMIT_RATIO__):
         
         new_limit = min(soft, round(available_memory * limit_ratio))
         
-        resource.setrlimit(resource.RLIMIT_AS, (new_limit, hard))
+        try:
+            resource.setrlimit(resource.RLIMIT_AS, (new_limit, hard))
+        except:
+            return False
+        
+        return True
 
 def strip_file_blank_space(filename, block_size=__DEFAULT_BLOCK_SIZE__):
     # Strip blank space at the end of a file, and return the new file size
