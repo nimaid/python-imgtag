@@ -23,7 +23,10 @@ def set_memory_limit(limit_ratio=__DEFAULT_MEMORY_LIMIT_RATIO__):
         
         soft, hard = resource.getrlimit(resource.RLIMIT_AS)
         available_memory = psutil.virtual_memory().available
-        resource.setrlimit(resource.RLIMIT_AS, (round(available_memory * limit_ratio), hard))
+        
+        new_limit = min(soft, round(available_memory * limit_ratio))
+        
+        resource.setrlimit(resource.RLIMIT_AS, (new_limit, hard))
 
 def strip_file_blank_space(filename, block_size=__DEFAULT_BLOCK_SIZE__):
     # Strip blank space at the end of a file, and return the new file size
