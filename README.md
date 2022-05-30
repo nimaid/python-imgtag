@@ -33,16 +33,18 @@ from imgtag import ImgTag
 
 # Open image for tag editing
 test = ImgTag(
-           filename="test.jpg", # The image file
-           force_case="lower",  # Converts the case of all tags
-                                # Can be `None`, `"lower"`, `"upper"`
-                                # Default: None
-           strip=True,          # Strips whitespace from the ends of all tags
-                                # Default: True
-           no_duplicates=True,  # Removes all duplicate tags (case sensitive)
-                                # Default: True
-           use_warnings=True    # Toggles warnings
-                                # Default: True
+           filename="test.jpg",   # The image file
+           force_case="lower",    # Converts the case of all tags
+                                  # Can be `None`, `"lower"`, `"upper"`
+                                  # Default: None
+           strip=True,            # Strips whitespace from the ends of all tags
+                                  # Default: True
+           no_duplicates=True,    # Removes all duplicate tags (case sensitive)
+                                  # Default: True
+           use_warnings=True      # Toggles warnings
+                                  # Default: True
+           memory_limit_ratio=0.8 # The maximum percent of free memory to use
+                                  # Default: 0.8
        )
 
 # Print existing tags
